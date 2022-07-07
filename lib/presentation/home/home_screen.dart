@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:velonto_food_copy/presentation/home/components/drop_down_menu.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -9,6 +10,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late List<String> foods;
+  int selectedIndex = -1;
+
+  @override
+  void initState() {
+    foods = [
+      'apple',
+      'bread',
+      'cookie',
+      'cheese',
+      'pizza',
+      'hamburger',
+      'carrot',
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -270,29 +287,41 @@ class _HomeScreenState extends State<HomeScreen> {
           Navigator.of(context).pop();
         },
       ),
-      title: Container(
-        width: 200,
-        height: 45,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30.0),
-            color: Colors.grey.shade100),
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text(
-                'Current location',
-                style: TextStyle(fontSize: 12),
-              ),
-              Icon(Icons.arrow_drop_down)
-            ],
-          ),
-        ),
+      title: DropDownMenu(
+        list: foods,
+        whenItemClicked: (int index){
+          setState((){
+            selectedIndex = index;
+          });
+        },
+        child: _buildTitle(),
       ),
       actions: [
         _makeActionButton(Icons.search_rounded),
         _makeActionButton(Icons.list),
       ],
+    );
+  }
+
+  Container _buildTitle() {
+    return Container(
+      width: 200,
+      height: 55,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.0),
+          color: Colors.grey.shade100),
+      child: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              selectedIndex == -1 ? 'Current location' : foods[selectedIndex],
+              style: const TextStyle(fontSize: 12),
+            ),
+            const Icon(Icons.arrow_drop_down)
+          ],
+        ),
+      ),
     );
   }
 
